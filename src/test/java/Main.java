@@ -1,6 +1,8 @@
 
 import com.mftplus.lettertest.model.entity.Letter;
 
+import com.mftplus.lettertest.model.entity.LetterRef;
+import com.mftplus.lettertest.model.service.LetterRefService;
 import com.mftplus.lettertest.model.service.LetterService;
 
 public class Main {
@@ -13,12 +15,12 @@ public class Main {
 //        System.out.println("Current Calendar's Year: " + calendar.get(Calendar.MONTH));
 //        System.out.println("Current Calendar's Year: " + calendar.get(Calendar.DATE));
 
-        Letter letter =
-                Letter.builder()
-                        .context("mhhaij akdoihsdf jhdsfhdf hfdhsdfhsd hi this is me kjsdfugds")
-                                .build();
-        LetterService.getUserService().save(letter);
-        LetterService.getUserService().findByPartOfText("hi this is me");
+//        Letter letter =
+//                Letter.builder()
+//                        .context("mhhaij akdoihsdf jhdsfhdf hfdhsdfhsd hi this is me kjsdfugds")
+//                                .build();
+//        LetterService.getUserService().save(letter);
+//        LetterService.getUserService().findByPartOfText("hi this is me");
 
 //            try {
 //                EntityTransaction entityTransaction = JpaProvider.getJpa().getEntityManager().getTransaction();
@@ -37,12 +39,16 @@ public class Main {
 //                entityTransaction.rollback();
 //            }
 
+        Letter letter =
+                Letter.builder().build();
+        LetterService.getUserService().save(letter);
 
-
-
-
-
-
+        LetterRef letterRef =
+                LetterRef.builder()
+                        .letterId(letter)
+                        .build();
+        LetterRefService.getLetterRefService().save(letterRef);
+        System.out.println(LetterRefService.getLetterRefService().findByLetter(letter));
 
 
     }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LetterService implements Service<Letter,String> {
+public class LetterService implements Service<Letter,Long> {
     private static final LetterService letterService = new LetterService();
 
     private LetterService() {
@@ -23,41 +23,41 @@ public class LetterService implements Service<Letter,String> {
 
     @Override
     public Letter save(Letter letter) throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             return crudRepository.save(letter);
         }
     }
 
     @Override
     public Letter edit(Letter letter) throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             return crudRepository.edit(letter);
         }
     }
 
     @Override
-    public Letter remove(String id) throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+    public Letter remove(Long id) throws Exception {
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             return crudRepository.remove(Letter.class,id);
         }
     }
 
     @Override
-    public Letter findById(String id) throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+    public Letter findById(Long id) throws Exception {
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             return crudRepository.findById(Letter.class,id);
         }
     }
 
     @Override
     public List<Letter> findAll() throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             return crudRepository.findAll(Letter.class);
         }
     }
 
     public Letter findByTitle(String title) throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             Map<String,Object> params = new HashMap<>();
             params.put("title",title);
             List<Letter> letterList = crudRepository.findBy("Letter.FindByTitle",params);
@@ -66,10 +66,19 @@ public class LetterService implements Service<Letter,String> {
     }
 
     public Letter findByContext(String context) throws Exception {
-        try (CRUDRepository<Letter,String> crudRepository = new CRUDRepository<>()){
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             Map<String,Object> params = new HashMap<>();
             params.put("context",context);
             List<Letter> letterList = crudRepository.findBy("Letter.FindByContext",params);
+            return (letterList.isEmpty() ? null : letterList.get(0));
+        }
+    }
+
+    public Letter findByDate(String date) throws Exception {
+        try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
+            Map<String,Object> params = new HashMap<>();
+            params.put("date",date);
+            List<Letter> letterList = crudRepository.findBy("Letter.FindByDate",params);
             return (letterList.isEmpty() ? null : letterList.get(0));
         }
     }

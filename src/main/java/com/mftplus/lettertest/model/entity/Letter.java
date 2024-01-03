@@ -11,7 +11,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.TermVector;
 
 import javax.persistence.*;
@@ -28,11 +27,11 @@ import java.util.List;
 
 @Entity (name = "letterEntity")
 @Table (name = "letter_tbl")
-@Indexed
 
 @NamedQueries({
         @NamedQuery(name = "Letter.FindByTitle",query = "select oo from letterEntity oo where oo.title=:title"),
-        @NamedQuery(name = "Letter.FindByContext",query = "select oo from letterEntity oo where oo.context=:context")
+        @NamedQuery(name = "Letter.FindByContext",query = "select oo from letterEntity oo where oo.context=:context"),
+        @NamedQuery(name = "Letter.FindByDate",query = "select oo from letterEntity oo where oo.date=:date")
 })
 public class Letter implements Serializable {
     @Id
@@ -43,6 +42,7 @@ public class Letter implements Serializable {
     @Column (name = "l_title")
     private String title;
 
+    //this is the generated letterNumber
     @OneToOne
     private GeneratedSequence myVal;
 
@@ -78,6 +78,9 @@ public class Letter implements Serializable {
 
     @Column (name = "l_receiver_title" , length = 25)
     private String receiverTitle;
+
+    @ManyToMany
+    private List<User> receivers;
 
     @Column (name = "l_sender_name" , length = 25)
     private String senderName;
