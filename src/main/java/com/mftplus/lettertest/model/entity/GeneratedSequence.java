@@ -1,4 +1,4 @@
-package com.mftplus.lettertest.model.utils;
+package com.mftplus.lettertest.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

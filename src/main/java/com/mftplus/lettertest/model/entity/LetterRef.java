@@ -1,5 +1,6 @@
 package com.mftplus.lettertest.model.entity;
 
+import com.github.mfathi91.time.PersianDate;
 import com.mftplus.lettertest.model.entity.enums.RefType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -44,8 +46,30 @@ public class LetterRef implements Serializable {
     @Column (name = "r_date_and_time")
     private LocalDateTime refDateAndTime;
 
+    @Transient
+    private LocalDateTime faRefDateAndTime;
+
+    public String getFaRefDateAndTime() {
+        return PersianDate.fromGregorian(LocalDate.from(refDateAndTime)).toString();
+    }
+
+    public void setFaRefDateAndTime(String faRefDateAndTime) {
+        this.refDateAndTime = LocalDateTime.from(PersianDate.parse(faRefDateAndTime).toGregorian());
+    }
+
     @Column (name = "r_expiration")
     private LocalDateTime expiration;
+
+    @Transient
+    private LocalDateTime faExpiration;
+
+    public String getFaExpiration() {
+        return PersianDate.fromGregorian(LocalDate.from(expiration)).toString();
+    }
+
+    public void setFaExpiration(String faExpiration) {
+        this.expiration = LocalDateTime.from(PersianDate.parse(faExpiration).toGregorian());
+    }
 
     @Column (name = "r_paraph" , length = 50)
     private String paraph;

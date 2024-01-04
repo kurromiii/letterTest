@@ -23,6 +23,7 @@ public class LetterService implements Service<Letter,Long> {
 
     @Override
     public Letter save(Letter letter) throws Exception {
+
         try (CRUDRepository<Letter,Long> crudRepository = new CRUDRepository<>()){
             return crudRepository.save(letter);
         }

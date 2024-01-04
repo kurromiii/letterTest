@@ -1,10 +1,8 @@
 package com.mftplus.lettertest.model.entity;
 
-import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.ULocale;
+import com.github.mfathi91.time.PersianDate;
 import com.mftplus.lettertest.model.entity.enums.Classification;
 
-import com.mftplus.lettertest.model.utils.GeneratedSequence;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,23 +33,55 @@ import java.util.List;
 })
 public class Letter implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "letterSeq", sequenceName = "letter_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "letterSeq")
     @Column (name = "l_Id")
     private long id;
 
     @Column (name = "l_title")
     private String title;
 
-    //this is the generated letterNumber
     @OneToOne
-    private GeneratedSequence myVal;
+    private GeneratedSequence registerNumber;
+
+    @Column (name = "l_register_date_and_time")
+    private LocalDateTime registerDateAndTime;
+
+    @Transient
+    private LocalDateTime faRegisterDateAndTime;
+
+    public String getFaRegisterDateAndTime() {
+        return PersianDate.fromGregorian(LocalDate.from(registerDateAndTime)).toString();
+    }
+
+    public void setFaRegisterDateAndTime(String faRegisterDateAndTime) {
+        this.registerDateAndTime = LocalDateTime.from(PersianDate.parse(faRegisterDateAndTime).toGregorian());
+    }
 
     @Column (name = "l_letter_number" , length = 30 , unique = true)
     private String letterNumber;
 
+    public void letterNumberGenerator(){
+        String faRegisterDateAndTime = getFaRegisterDateAndTime();
+        String registerNumber = String.valueOf(getRegisterNumber());
+
+        setLetterNumber(faRegisterDateAndTime + registerNumber);
+    }
+
     //needs to be in persian
     @Column (name = "l_date")
     private LocalDate date;
+
+    @Transient
+    private LocalDate faDate;
+
+    public String getFaDate() {
+        return PersianDate.fromGregorian(date).toString();
+    }
+
+    public void setFaDate(String faDate) {
+        this.date = PersianDate.parse(faDate).toGregorian();
+    }
 
     @Column (name = "l_subject", length = 25)
     private String subject;
@@ -61,15 +91,7 @@ public class Letter implements Serializable {
     @Field(termVector = TermVector.YES)
     private String context;
 
-    //how to get this num?
-    @Column (name = "l_register", length = 20)
-    private String registerNumber;
-
-    @Column (name = "l_register_date_and_time")
-    private LocalDateTime registerDateAndTime;
-
     //what is indicator code?
-    @Transient
     @Column (name = "l_indicator_code", length = 20)
     private String indicatorCode;
 
@@ -94,11 +116,12 @@ public class Letter implements Serializable {
     @Enumerated (EnumType.ORDINAL)
     private Classification classification;
 
+    //???
     @ManyToMany
     private List<User> carbonCopies;
 
     @ManyToOne
-    private User userId;
+    private User user;
 
     @ManyToOne
     private TransferMethod transferMethod;
@@ -106,21 +129,4 @@ public class Letter implements Serializable {
     //what is this?
     @Column (name = "l_natural_or_legal")
     private Boolean naturalOrLegal;
-
-    public void letterNumberGenerator(String myVal){
-        ULocale locale = new ULocale("fa_IR@calendar=persian");
-        Calendar calendar = Calendar.getInstance(locale.toLocale());
-        String year = String.valueOf(calendar.get(Calendar.YEAR));
-        letterNumber = (String) year + (String) myVal;
-        System.out.println("letter number : " + letterNumber);
-    }
-
-
-
-
-
-
-
-
-
 }

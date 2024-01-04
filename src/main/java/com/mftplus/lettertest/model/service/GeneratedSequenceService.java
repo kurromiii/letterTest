@@ -1,6 +1,6 @@
 package com.mftplus.lettertest.model.service;
 import com.mftplus.lettertest.model.repository.CRUDRepository;
-import com.mftplus.lettertest.model.utils.GeneratedSequence;
+import com.mftplus.lettertest.model.entity.GeneratedSequence;
 
 import java.util.List;
 
